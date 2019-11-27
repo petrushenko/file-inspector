@@ -1,0 +1,51 @@
+﻿  dirview.c
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\dirview.c(55,15): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\dirview.c(79,15): warning C4098: 'recursiveFilesCount': 'void' function returning a value
+  filehash.c
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\dirview.c(107,13): warning C4098: 'recursiveFilesCount': 'void' function returning a value
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\filehash.c(23,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\filehash.c(50,24): warning C4133: '=': incompatible types - from 'ht_item_t *' to 'ht_item_t *'
+  hashfunc.c
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\filehash.c(73,7): warning C4101: 'symb': unreferenced local variable
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashfunc.c(90,1): warning C4028: formal parameter 1 different from declaration
+  hashtable.c
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashfunc.c(90,1): warning C4029: declared formal parameter list different from definition
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(49,27): warning C4133: '=': incompatible types - from 'ht_item_t *' to '_ht_item *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(52,20): warning C4133: '=': incompatible types - from 'ht_item_t *' to 'ht_item_t *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(62,1): warning C4133: 'initializing': incompatible types - from 'ht_item_t *' to 'ht_item_t *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(95,22): warning C4133: '=': incompatible types - from 'ht_item_t *' to 'ht_item_t *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(98,30): warning C4133: '=': incompatible types - from '_ht_item *' to 'ht_item_t *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(126,19): warning C4133: '=': incompatible types - from 'ht_item_t *' to 'ht_item_t *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(138,1): warning C4029: declared formal parameter list different from definition
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(153,24): warning C4013: 'ListDirectoryContents' undefined; assuming extern returning int
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(154,34): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(162,41): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(180,38): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(183,38): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(199,35): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(202,34): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(203,34): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(206,34): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+  main.c
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\hashtable.c(236,19): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(74,1): warning C4028: formal parameter 3 different from declaration
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(244,13): warning C4047: 'function': 'HMENU' differs in levels of indirection from 'int'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(244,13): warning C4024: 'CreateWindowExW': different types for formal and actual parameter 10
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(374,30): warning C4013: 'TerminateScanOrImprint' undefined; assuming extern returning int
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(382,52): warning C4133: 'function': incompatible types - from 'void (__cdecl *)(HWND)' to 'LPTHREAD_START_ROUTINE'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(408,57): warning C4047: '==': 'BOOL' differs in levels of indirection from 'void *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(412,31): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'int'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(419,54): warning C4047: '==': 'BOOL' differs in levels of indirection from 'void *'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(423,28): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'int'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(446,58): warning C4133: 'function': incompatible types - from 'void (__cdecl *)(HWND)' to 'LPTHREAD_START_ROUTINE'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(628,22): warning C4013: 'recursiveFilesCount' undefined; assuming extern returning int
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(634,24): warning C4013: 'ListDirectoryContents' undefined; assuming extern returning int
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(636,15): warning C4013: 'fname_to_str' undefined; assuming extern returning int
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(637,47): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(639,30): warning C4133: 'function': incompatible types - from 'ht_item_t **' to 'ht_item_t **'
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(606,7): warning C4101: 'out_fname': unreferenced local variable
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(686,100): warning C4020: '_ht_chngs': too many actual parameters
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(659,8): warning C4101: 'str_res': unreferenced local variable
+  Generating Code...
+D:\bsuir\C\projects\file_inspector\file-inspector\inspector\main.c(657,7): warning C4101: 'out_fname': unreferenced local variable
+  inspector.vcxproj -> D:\bsuir\C\projects\file_inspector\file-inspector\x64\Debug\inspector.exe
