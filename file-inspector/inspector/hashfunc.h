@@ -1,9 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdint.h>
+#include <Esent.h>
 
 typedef unsigned short crc16_t;
-
-unsigned short Crc16(unsigned char * pcBlock, unsigned short len, crc16_t crc_init);
-
-uint_least32_t Crc32(unsigned char *buf, size_t len, uint_least32_t crc_init);
+/*
+*Вычисление контрольной суммы из буфера buff, len - длина буфера
+*/
+uint_least32_t Crc32(const WCHAR *buf, size_t len);

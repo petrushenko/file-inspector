@@ -601,9 +601,7 @@ void SetScanWnd(void) {
 int files_count = 0;
 void GetImprint(HWND cb)
 {
-	WCHAR drive_str[10] = L"";
-	char ch_drive_str[10] = "";
-	char out_fname[PATHMAXSIZE];
+	WCHAR drive_str[20] = L"";
 	uint32_t res = 0;
 	WCHAR str_res[40];
 
@@ -615,9 +613,9 @@ void GetImprint(HWND cb)
 
 	SendMessageW(cb, (UINT)CB_GETLBTEXT, (WPARAM)i, (LPARAM)drive_str);
 
-	size_t len = wcstombs(ch_drive_str, drive_str, wcslen(drive_str));
-	if (len > 0u)
-		ch_drive_str[len] = '\0';
+	//size_t len = wcstombs(ch_drive_str, drive_str, wcslen(drive_str));
+	//if (len > 0u)
+		//ch_drive_str[len] = '\0';
 
 	if (wcscmp(drive_str, L"All") == 0) {
 		MessageBeep(MB_OK);
@@ -625,16 +623,17 @@ void GetImprint(HWND cb)
 	}
 	else {
 		//thread
-		recursiveFilesCount(ch_drive_str, &files_count);
+		recursiveFilesCount(drive_str, &files_count);
 		//подготовка прогрес бара:
-		ShowWindow(hImprintProgressBar, SW_SHOW);
-		SendMessageW(hImprintProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0,files_count));    
-		SendMessageW(hImprintProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
-
-		ListDirectoryContents(ch_drive_str, h_table->ht_items, hImprintProgressBar);
-		strcat_s(ch_drive_str, 10, ".csm");
-		fname_to_str(ch_drive_str);
-		res = (uint32_t)fhash_save(h_table->ht_items, ch_drive_str);
+		//ShowWindow(hImprintProgressBar, SW_SHOW);
+		//SendMessageW(hImprintProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, files_count));    
+		//SendMessageW(hImprintProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
+		PB_init(hImprintProgressBar, files_count);
+		ListDirectoryContents(drive_str, h_table->ht_items, hImprintProgressBar);
+		//strcat_s(ch_drive_str, 10, ".csm");
+		fname_to_str(drive_str);		
+		wcscat_s(drive_str, 20, L".csm");
+		res = (uint32_t)fhash_save(h_table->ht_items, drive_str);
 	}
 	ht_destroy(h_table->ht_items);
 	free(h_table);
@@ -646,44 +645,51 @@ void GetImprint(HWND cb)
 	hImprintThread = NULL;
 }
 
+int PB_init(HANDLE pb, int pb_size) {
+	ShowWindow(pb, SW_SHOW);
+	SendMessageW(pb, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, pb_size));    
+	SendMessageW(pb, PBM_SETSTEP, (WPARAM) 1, 0); 
+}
+
 // Сканирование диска
 void GetScan(HWND cb)
 {
 	// Указатели на измененные файлы
 	ht_item_t *tmp_changed = NULL, *tmp_deleted = NULL, *tmp_new = NULL, *ptr_to_del = NULL;
 
-	WCHAR drive_str[10] = L"";
-	char ch_drive_str[10] = "", _ch_drive_str[10] = "";
-	char out_fname[PATHMAXSIZE];
+	WCHAR drive_str[20] = L"";
+	WCHAR _drive_str[20] = L"";
 	uint32_t res = 0;
 	WCHAR str_res[40];
 
-	memset(drive_str, '\0', 10 * sizeof(WCHAR));
+	memset(drive_str, L'\0', 20 * sizeof(WCHAR));
 
 	LRESULT i = SendMessageW(cb, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
 
 	SendMessageW(cb, (UINT)CB_GETLBTEXT, (WPARAM)i, (LPARAM)drive_str);
 
-	size_t len = wcstombs(ch_drive_str, drive_str, wcslen(drive_str));
-	if (len > 0u)
-		ch_drive_str[len] = '\0';
+	//size_t len = wcstombs(ch_drive_str, drive_str, wcslen(drive_str));
+	//if (len > 0u)
+	//	ch_drive_str[len] = '\0';
 
 	if (wcscmp(drive_str, L"All") == 0) {
 		MessageBeep(MB_OK);
 		MessageBoxW(NULL, L"I can't find any files...", L"Imprint", MB_OK);
 	}
 	else {
-		strcpy_s(_ch_drive_str, 10, ch_drive_str);
-		fname_to_str(ch_drive_str);
-		strcat_s(ch_drive_str, 10, ".csm");
+		//strcpy_s(_ch_drive_str, 10, ch_drive_str);
+		wcscpy_s(_drive_str, 20, drive_str);
+		fname_to_str(drive_str);
+		wcscat_s(drive_str, 20, L".csm");
 
-		recursiveFilesCount(_ch_drive_str, &files_count);
+		recursiveFilesCount(_drive_str, &files_count);
 		//подготовка прогрес бара:
-		ShowWindow(hScanProgressBar, SW_SHOW);
-		SendMessageW(hScanProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, files_count));    
-		SendMessageW(hScanProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
-
-		if (_ht_chngs(&tmp_new, &tmp_deleted, &tmp_changed, ch_drive_str, _ch_drive_str, hScanProgressBar) == -1) {
+		//ShowWindow(hScanProgressBar, SW_SHOW);
+		//SendMessageW(hScanProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, files_count));    
+		//SendMessageW(hScanProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
+		PB_init(hScanProgressBar, files_count);
+		//memory leak*
+		if (_ht_chngs(&tmp_new, &tmp_deleted, &tmp_changed, drive_str, _drive_str, hScanProgressBar) == -1) {
 			MessageBeep(MB_OK);
 			if (MessageBoxW(NULL, L"There is not imprint of this file.\nMake it?", L"No Imprint", MB_YESNO) == IDYES) {
 				GetImprint(cbDrivesScan);
@@ -691,26 +697,27 @@ void GetScan(HWND cb)
 			}
 		}
 		else {
+			//clear table
 			SendMessageW(liboChanged, LB_RESETCONTENT, (WPARAM)0, (LPARAM)0);
 			SendMessageW(liboNew, LB_RESETCONTENT, (WPARAM)0, (LPARAM)0);
 			SendMessageW(liboDeleted, LB_RESETCONTENT, (WPARAM)0, (LPARAM)0);
 			while (tmp_deleted) {
 				ptr_to_del = tmp_deleted;
-				SendMessageA(liboDeleted, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_deleted->fname);
+				SendMessageW(liboDeleted, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_deleted->fname);
 				tmp_deleted = tmp_deleted->pnext;
 				free(ptr_to_del);
 			}
 			free(tmp_deleted);
 			while (tmp_changed) {
 				ptr_to_del = tmp_changed;
-				SendMessageA(liboChanged, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_changed->fname);
+				SendMessageW(liboChanged, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_changed->fname);
 				tmp_changed = tmp_changed->pnext;
 				free(ptr_to_del);
 			}
 			free(tmp_changed);
 			while (tmp_new) {
 				ptr_to_del = tmp_new;
-				SendMessageA(liboNew, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_new->fname);
+				SendMessageW(liboNew, LB_ADDSTRING, (WPARAM)0, (LPARAM)tmp_new->fname);
 				tmp_new = tmp_new->pnext;
 				free(ptr_to_del);
 			}

@@ -6,31 +6,31 @@
 
 #include "dirview.h"
 
-
-int fname_to_str(char *fname)
+int fname_to_str(WCHAR *fname)
 {
 	int res = 0;
-	for (int i = 0; i < strlen(fname); i++) {
-		if (*(fname + i) == '\\' || *(fname + i) == ':') {
-			*(fname + i) = '_';
+	for (int i = 0; i < wcslen(fname); i = i + 1) {
+		if (*(fname + i) == L'\\' || *(fname + i) == L':') {
+			*(fname + i) = L'\0';			
 			res++;
+			break;
 		}
 	}
 	return res;
 }
 
 // Поиск файлов по папкам
-bool ListDirectoryContents(const char *sDir, ht_item_t **tbl, HANDLE hProgressBar)
+bool ListDirectoryContents(const WCHAR *sDir, ht_item_t **tbl, HANDLE hProgressBar)
 {
-	WIN32_FIND_DATA fdFile;
+	WIN32_FIND_DATAW fdFile;
 	HANDLE hFind = NULL;
 
-	char sPath[PATHMAXSIZE];
+	WCHAR sPath[PATHMAXSIZE];
 
 	//Specify a file mask. *.* = We want everything!
-	sprintf_s(sPath, PATHMAXSIZE, "%s\\*.*", sDir);
+	swprintf_s(sPath, PATHMAXSIZE, L"%ls\\*.*", sDir);
 
-	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
+	if ((hFind = FindFirstFileW(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
 	{
 		return false;
 	}
@@ -39,12 +39,12 @@ bool ListDirectoryContents(const char *sDir, ht_item_t **tbl, HANDLE hProgressBa
 	{
 		//Find first file will always return "."
 		//    and ".." as the first two directories.
-		if (strcmp(fdFile.cFileName, ".") != 0
-			&& strcmp(fdFile.cFileName, "..") != 0)
+		if (wcscmp(fdFile.cFileName, L".") != 0
+			&& wcscmp(fdFile.cFileName, L"..") != 0)
 		{
 			//Build up our file path using the passed in
 			//  [sDir] and the file/foldername we just found:
-			sprintf_s(sPath, PATHMAXSIZE, "%s\\%s", sDir, fdFile.cFileName);
+			swprintf_s(sPath, PATHMAXSIZE, L"%ls\\%ls", sDir, fdFile.cFileName);
 
 			//Is the entity a File or Folder?
 			if (fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -56,7 +56,7 @@ bool ListDirectoryContents(const char *sDir, ht_item_t **tbl, HANDLE hProgressBa
 				SendMessageW(hProgressBar, PBM_STEPIT, 0, 0);
 			}
 		}
-	} while (FindNextFile(hFind, &fdFile)); //Find the next file.
+	} while (FindNextFileW(hFind, &fdFile)); //Find the next file.
 
 	FindClose(hFind); //Always, Always, clean things up!
 
@@ -64,43 +64,35 @@ bool ListDirectoryContents(const char *sDir, ht_item_t **tbl, HANDLE hProgressBa
 }
 
 //Количество файлов на диске
-void recursiveFilesCount(const TCHAR Path[], int* nCount)
+void recursiveFilesCount(const WCHAR Path[], int* nCount)
 {
-   	WIN32_FIND_DATA fdFile;
+	WIN32_FIND_DATAW fdFile;
 	HANDLE hFind = NULL;
 
-	char sPath[PATHMAXSIZE];
+	WCHAR sPath[PATHMAXSIZE];
+	swprintf_s(sPath, PATHMAXSIZE, L"%ls\\*.*", Path);
 
-	//Specify a file mask. *.* = We want everything!
-	sprintf_s(sPath, PATHMAXSIZE, "%s\\*.*", Path);
-
-	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
+	if ((hFind = FindFirstFileW(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
 	{
 		return false;
 	}
 
 	do
 	{
-		//Find first file will always return "."
-		//    and ".." as the first two directories.
-		if (strcmp(fdFile.cFileName, ".") != 0
-			&& strcmp(fdFile.cFileName, "..") != 0)
+		if (wcscmp(fdFile.cFileName, L".") != 0
+			&& wcscmp(fdFile.cFileName, L"..") != 0)
 		{
-			//Build up our file path using the passed in
-			//  [sDir] and the file/foldername we just found:
-			sprintf_s(sPath, PATHMAXSIZE, "%s\\%s", Path, fdFile.cFileName);
+			swprintf_s(sPath, PATHMAXSIZE, L"%ls\\%ls", Path, fdFile.cFileName);
 
-			//Is the entity a File or Folder?
 			if (fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			{
-				//ListDirectoryContents(sPath, tbl, hProgressBar); 
 				recursiveFilesCount(sPath, nCount);
 			}
 			else {
 				(*nCount)++;
 			}
 		}
-	} while (FindNextFile(hFind, &fdFile)); //Find the next file.
+	} while (FindNextFileW(hFind, &fdFile)); //Find the next file.
 
 	FindClose(hFind); //Always, Always, clean things up!
 

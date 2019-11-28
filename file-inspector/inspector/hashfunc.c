@@ -5,7 +5,6 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "hashfunc.h"
-#include <stdint.h>
 
 /* 
   Name  : CRC-32
@@ -86,7 +85,7 @@ const uint_least32_t Crc32Table[256] = {
 	0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 };
 
-uint_least32_t Crc32(const unsigned char * buf, size_t len)
+uint_least32_t Crc32(const WCHAR *buf, size_t len)
 {
 	uint_least32_t crc = 0xFFFFFFFF;
 	while (len--)

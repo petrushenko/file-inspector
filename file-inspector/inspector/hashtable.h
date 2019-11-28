@@ -2,23 +2,25 @@
 
 #include <stdint.h>
 #include <limits.h>
-#include "dirview.h"
+#include <stdlib.h>
+#include <string.h>
+#include <Windows.h>
+#include <stdio.h>
+
+#include "filehash.h"
 
 #define UNUCODE
 #define _UNICODE
 
-#define HASHTABLE_MIN_SIZE 2
-//#define HASHTABLE_MIN_SIZE USHRT_MAX
-
-
-#define PATHMAXSIZE 2048
+#define HASHTABLE_MIN_SIZE USHRT_MAX
+#define PATHMAXSIZE MAX_PATH+1
 
 //Элемент хэш таблицы
 typedef struct _ht_item {
 	uint32_t crc32;
-	char fname[PATHMAXSIZE];
+	WCHAR fname[PATHMAXSIZE];
 	struct _ht_item *pnext;
-} ht_item_t;
+} ht_item_t, *ht_item_p;
 
 //Хеш-таблица
 //Решение коллизий - цепочки
@@ -27,7 +29,7 @@ typedef struct _ht_item {
 
 typedef struct _htable {
 	ht_item_t **ht_items;
-	char *dir;
+	WCHAR *dir;
 	size_t size;
 	size_t nitems;
 } htable_t;
@@ -35,10 +37,8 @@ typedef struct _htable {
 void ht_init(struct ht_item_t **tbl);
 htable_t *_ht_init(void);
 void ht_clear(struct ht_item_t **tbl);
-void ht_add(struct ht_item_t **tbl, char *fname, uint32_t crc32);
-ht_item_t *ht_get(struct ht_item_t **tbl, char *fname);
-uint32_t _ht_chngs(ht_item_t **newf, ht_item_t **del, ht_item_t **chn,
-	const char *fname, const char *dir);
-void ht_delete(struct ht_item_t **tbl, char *fname, uint32_t crc32);
+void ht_add(struct ht_item_t **tbl, WCHAR *fname, uint32_t crc32);
+ht_item_t *ht_get(struct ht_item_t **tbl, WCHAR *fname);
+uint32_t _ht_chngs(ht_item_t **newf, ht_item_t **del, ht_item_t **chn, const WCHAR *fname, const WCHAR *dir, HANDLE hProgressBar);
+void ht_delete(struct ht_item_t **tbl, WCHAR *fname, uint32_t crc32);
 void ht_destroy(struct ht_item_t **tbl);
-void ht_dir_contents(htable_t **tbl, const char *dirname);
