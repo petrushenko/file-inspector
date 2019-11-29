@@ -24,7 +24,6 @@ uint_least32_t fgetcrc32(WCHAR *filename)
 				crc = Crc32(buffer, result, crc);
 			}
 		}
-		//crc = Crc32(filename, wcslen(filename), crc);
 		fclose(f);
 		//int size = (BUFFSIZE * sizeof(byte_t));
 		//ZeroMemory(buffer, size);
