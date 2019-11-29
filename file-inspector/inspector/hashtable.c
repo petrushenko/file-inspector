@@ -156,21 +156,25 @@ uint32_t _ht_chngs(ht_item_t **newf, ht_item_t **del, ht_item_t **chn, const WCH
 			
 			if (!ht_item) {
 				tmpPtr = malloc(sizeof(ht_item_t));
-				tmpPtr->crc32 = crc;
-				wcscpy_s(tmpPtr->fname, PATHMAXSIZE, filename);
-				tmpPtr->pnext = deleted;
-				deleted = tmpPtr;
+				if (tmpPtr) {
+					tmpPtr->crc32 = crc;
+					wcscpy_s(tmpPtr->fname, PATHMAXSIZE, filename);
+					tmpPtr->pnext = deleted;
+					deleted = tmpPtr;
+				}				
 			}
 			else {
 				while (ht_item) {
 					if (wcscmp(ht_item->fname, filename) == 0) {
 						if (ht_item->crc32 != crc) {
 							tmpPtr = malloc(sizeof(ht_item_t));
-							tmpPtr->crc32 = ht_item->crc32;
-							wcscpy_s(tmpPtr->fname, PATHMAXSIZE, ht_item->fname);
-							tmpPtr->pnext = changed;
-							changed = tmpPtr;
-							ht_delete(hash_table->ht_items, tmpPtr->fname, tmpPtr->crc32);
+							if (tmpPtr) {
+								tmpPtr->crc32 = ht_item->crc32;
+								wcscpy_s(tmpPtr->fname, PATHMAXSIZE, ht_item->fname);
+								tmpPtr->pnext = changed;
+								changed = tmpPtr;
+								ht_delete(hash_table->ht_items, tmpPtr->fname, tmpPtr->crc32);
+							}							
 						}
 						else//удаление из хеш-таблицы
 							ht_delete(hash_table->ht_items, filename, crc);
@@ -184,12 +188,14 @@ uint32_t _ht_chngs(ht_item_t **newf, ht_item_t **del, ht_item_t **chn, const WCH
 			ht_item = hash_table->ht_items[i];
 			while (ht_item) {
 				tmpPtr = malloc(sizeof(ht_item_t));
-				tmpPtr->crc32 = ht_item->crc32;
-				wcscpy_s(tmpPtr->fname, PATHMAXSIZE, ht_item->fname);
-				tmpPtr->pnext = pnew;
-				pnew = tmpPtr;
-				ht_item = ht_item->pnext;
-				ht_delete(hash_table->ht_items, tmpPtr->fname, tmpPtr->crc32);
+				if (tmpPtr) {
+					tmpPtr->crc32 = ht_item->crc32;
+					wcscpy_s(tmpPtr->fname, PATHMAXSIZE, ht_item->fname);
+					tmpPtr->pnext = pnew;
+					pnew = tmpPtr;
+					ht_item = ht_item->pnext;
+					ht_delete(hash_table->ht_items, tmpPtr->fname, tmpPtr->crc32);
+				}				
 			}
 		}
 		fhash_load(hash_table->ht_items, new_fname);
