@@ -262,14 +262,14 @@ void SetResultsControls(HWND hWnd)
 	SendMessageW(liboNew, LB_SETHORIZONTALEXTENT, (WPARAM)PATHMAXSIZE, (LPARAM)0);
 	SendMessageW(liboChanged, LB_SETHORIZONTALEXTENT, (WPARAM)PATHMAXSIZE, (LPARAM)0);
 }
-
+HANDLE hImprintStartBtn;
 //Создание элементов окна Imprint
 void SetImprControls(HWND hWnd)
 {
 	CreateWindowW(L"Static", L"Drives:", WS_CHILD | WS_VISIBLE, 25, 10, 60,
 		20, hWnd, NULL, NULL, NULL);
 
-	CreateWindowW(L"Button", L"Start", WS_CHILD | WS_VISIBLE, 135, 45, 80,
+	hImprintStartBtn = CreateWindowW(L"Button", L"Start", WS_CHILD | WS_VISIBLE, 135, 45, 80,
 		25, hWnd, (HMENU)IMPRWND_START, NULL, NULL);
 
 	CreateWindowW(L"Button", L"Cancel", WS_CHILD | WS_VISIBLE, 235, 45, 80,
@@ -312,6 +312,7 @@ void SetImprControls(HWND hWnd)
 	SendMessageW(cbDrivesImpr, (UINT)CB_SETCURSEL, (WPARAM)0, (LPARAM)0);
 }
 
+HANDLE hStartScanBtn;
 //Создание элементов окна Scan
 void SetScanControls(HWND hWnd)
 {
@@ -319,7 +320,7 @@ void SetScanControls(HWND hWnd)
 		20, hWnd, NULL, NULL, NULL);
 
 
-	CreateWindowW(L"Button", L"Start", WS_CHILD | WS_VISIBLE, 135, 45, 80,
+	hStartScanBtn = CreateWindowW(L"Button", L"Start", WS_CHILD | WS_VISIBLE, 135, 45, 80,
 		25, hWnd, (HMENU)IMPRWND_START, NULL, NULL);
 
 	CreateWindowW(L"Button", L"Cancel", WS_CHILD | WS_VISIBLE, 235, 45, 80,
@@ -601,6 +602,7 @@ void SetScanWnd(void) {
 int files_count = 0;
 void GetImprint(HWND cb)
 {
+	EnableWindow(hImprintStartBtn, FALSE);
 	WCHAR drive_str[20] = L"";
 	uint32_t res = 0;
 	WCHAR str_res[40];
@@ -625,9 +627,6 @@ void GetImprint(HWND cb)
 		//thread
 		recursiveFilesCount(drive_str, &files_count);
 		//подготовка прогрес бара:
-		//ShowWindow(hImprintProgressBar, SW_SHOW);
-		//SendMessageW(hImprintProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, files_count));    
-		//SendMessageW(hImprintProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
 		PB_init(hImprintProgressBar, files_count);
 		ListDirectoryContents(drive_str, h_table->ht_items, hImprintProgressBar);
 		//strcat_s(ch_drive_str, 10, ".csm");
@@ -639,10 +638,12 @@ void GetImprint(HWND cb)
 	free(h_table);
 	swprintf_s(str_res, 40, L"%u files was imprinted!", res);
 	MessageBoxW(NULL, str_res, L"Imprint", MB_OK);
+	//FINILAZE
 	ShowWindow(hImprintProgressBar, SW_HIDE);
 	MessageBeep(MB_OK);
 	SendMessageW(ImprintWnd, WM_CLOSE, (WPARAM)0, (LPARAM)0);
 	hImprintThread = NULL;
+	EnableWindow(hImprintStartBtn, TRUE);
 }
 
 int PB_init(HANDLE pb, int pb_size) {
@@ -654,6 +655,7 @@ int PB_init(HANDLE pb, int pb_size) {
 // Сканирование диска
 void GetScan(HWND cb)
 {
+	EnableWindow(hStartScanBtn, FALSE);
 	// Указатели на измененные файлы
 	ht_item_t *tmp_changed = NULL, *tmp_deleted = NULL, *tmp_new = NULL, *ptr_to_del = NULL;
 
@@ -668,10 +670,6 @@ void GetScan(HWND cb)
 
 	SendMessageW(cb, (UINT)CB_GETLBTEXT, (WPARAM)i, (LPARAM)drive_str);
 
-	//size_t len = wcstombs(ch_drive_str, drive_str, wcslen(drive_str));
-	//if (len > 0u)
-	//	ch_drive_str[len] = '\0';
-
 	if (wcscmp(drive_str, L"All") == 0) {
 		MessageBeep(MB_OK);
 		MessageBoxW(NULL, L"I can't find any files...", L"Imprint", MB_OK);
@@ -684,9 +682,6 @@ void GetScan(HWND cb)
 
 		recursiveFilesCount(_drive_str, &files_count);
 		//подготовка прогрес бара:
-		//ShowWindow(hScanProgressBar, SW_SHOW);
-		//SendMessageW(hScanProgressBar, PBM_SETRANGE, 0, (LPARAM) MAKELONG(0, files_count));    
-		//SendMessageW(hScanProgressBar, PBM_SETSTEP, (WPARAM) 1, 0); 
 		PB_init(hScanProgressBar, files_count);
 		//memory leak*
 		if (_ht_chngs(&tmp_new, &tmp_deleted, &tmp_changed, drive_str, _drive_str, hScanProgressBar) == -1) {
@@ -730,6 +725,7 @@ void GetScan(HWND cb)
 		}
 	}
 	// FINILIZE:
+	EnableWindow(hStartScanBtn, TRUE);
 	ShowWindow(hScanProgressBar, SW_HIDE);
 	hScanThread = NULL;
 }
